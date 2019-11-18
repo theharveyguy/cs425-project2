@@ -70,5 +70,33 @@ public class Database {
             }
         }
         catch (Exception e) { System.err.println( e.toString() ); }
+        
+        return results;
+    }
+    
+    public String getSkillsListAsHTML (int userid){
+        StringBuilder s = new StringBuilder();
+        
+        // query database and get info back as resultset
+        
+        while (resultset.next()){
+            String description = resultset.getString("description");
+            int id = resultset.getInt("id");
+            
+            //<input type="checkbox" name="skills" value="1" id="skills_id" checked>
+            //<label for="skills_id">Changing bed linens.</label><br />
+            s.append("<input type=\"checkbox\" name=\"skills\" value=\"");
+            s.append(id);
+            s.append("\" id=\"skills_").append(id).append("\"");
+            if (user != 0){
+                s.append("checked");
+            }
+            s.append("><br/>");
+            
+            s.append("<label for=\"skills_").append(id).append("\">");
+            s.append(description);
+            s.append("</label> <br/>");
+            
+        }
     }
 }

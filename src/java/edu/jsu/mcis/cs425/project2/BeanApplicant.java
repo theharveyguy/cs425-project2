@@ -1,6 +1,7 @@
 package edu.jsu.mcis.cs425.project2;
 
 import java.util.HashMap;
+import javax.naming.NamingException;
 
 public class BeanApplicant {
     
@@ -8,7 +9,7 @@ public class BeanApplicant {
     private String displayname;
     private int id;
     
-    public void setUserInfo() {
+    public void setUserInfo() throws NamingException {
         Database db = new Database();
         HashMap<String, String> userinfo = db.getUserInfo(username);
         id = Integer.parseInt(userinfo.get("userid"));
