@@ -53,7 +53,7 @@ public class Database {
         try{
             connection = getConnection();
             
-            query = "SELECT * FROM 'user' WHERE username = ?";
+            query = "SELECT * FROM 'user' WHERE username = ";
             pstatement = connection.prepareStatement(query);
             pstatement.setString(1,username);
             
@@ -83,8 +83,7 @@ public class Database {
             String description = resultset.getString("description");
             int id = resultset.getInt("id");
             
-            //<input type="checkbox" name="skills" value="1" id="skills_id" checked>
-            //<label for="skills_id">Changing bed linens.</label><br />
+            
             s.append("<input type=\"checkbox\" name=\"skills\" value=\"");
             s.append(id);
             s.append("\" id=\"skills_").append(id).append("\"");

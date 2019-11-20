@@ -7,6 +7,7 @@ public class BeanApplicant {
     
     private String username;
     private String displayname;
+    private String[] skills;
     private int id;
     
     public void setUserInfo() throws NamingException {
@@ -36,5 +37,21 @@ public class BeanApplicant {
     public void setUsername(String username) {
         this.username = username;
     }
+
+    public String[] getSkills() {
+        return skills;
+    }
+    public void setSkill(String[] skills) {
+        this.skills = skills;
+    }
     
+    public String getJobsList(){
+        Database db = new Database();
+        return(db.getJobsListAsHTML(id));
+    }
+    
+    public void setSkillsList(){
+        Database db = new Database();
+        db.setSkillsList();
+    }
 }
