@@ -8,12 +8,12 @@ public class BeanApplicant {
     private String username;
     private String displayname;
     private String[] skills;
-    private int id;
+    private int userid;
     
     public void setUserInfo() throws NamingException {
         Database db = new Database();
         HashMap<String, String> userinfo = db.getUserInfo(username);
-        id = Integer.parseInt(userinfo.get("userid"));
+        userid = Integer.parseInt(userinfo.get("userid"));
         displayname = userinfo.get("displayname");
     }
 
@@ -24,11 +24,11 @@ public class BeanApplicant {
         this.displayname = displayname;
     }
     
-    public int getId() {
-        return id;
+    public int getUserid() {
+        return userid;
     }
-    public void setId(int id) {
-        this.id = id;
+    public void setUserid(int id) {
+        this.userid = id;
     }
 
     public String getUsername() {
@@ -41,16 +41,21 @@ public class BeanApplicant {
     public String[] getSkills() {
         return skills;
     }
-    public void setSkill(String[] skills) {
+    public void setSkills(String[] skills) {
         this.skills = skills;
     }
     
-    public String getJobsList(){
+    public String getJobs() throws NamingException{
         Database db = new Database();
-        return(db.getJobsListAsHTML(id));
+        return(db.getJobsListAsHTML(userid));
     }
     
-    public void setSkillsList(){
+    public void setJobsList() throws NamingException{
+        Database db = new Database();
+        // set jobs in database
+    }
+    
+    public void setSkillsList() throws NamingException{
         Database db = new Database();
         db.setSkillsList();
     }

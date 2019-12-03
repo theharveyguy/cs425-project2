@@ -38,7 +38,6 @@ public class Database {
     public Connection getConnection() { return conn; }
     
     public HashMap getUserInfo(String username){
-        HashMap <String,String> results = null;
         
         //db pool variables
         Database db = null;
@@ -50,10 +49,12 @@ public class Database {
         ResultSetMetaData metadata = null;
         boolean hasResult;
         
+        HashMap <String,String> results = null;
+        
         try{
             connection = getConnection();
             
-            query = "SELECT * FROM 'user' WHERE username = ";
+            query = "SELECT * FROM 'user' WHERE username = ?";
             pstatement = connection.prepareStatement(query);
             pstatement.setString(1,username);
             
@@ -63,9 +64,8 @@ public class Database {
                 resultset = pstatement.getResultSet();
                 
                 if (resultset.next()) {
-                    // initialize HashMap
-                    // add user data from resultset
-                    // use key name "id" for the ID and "displayname" for the display name
+                    results.put("id",resultset.getString("id").trim());
+                    results.put("displayname", resultset.getString("displayname"));
                 }
             }
         }
@@ -77,6 +77,7 @@ public class Database {
     public String getSkillsListAsHTML (int userid){
         StringBuilder s = new StringBuilder();
         
+        // TODO
         // query database and get info back as resultset
         
         while (resultset.next()){
@@ -97,5 +98,19 @@ public class Database {
             s.append("</label> <br/>");
             
         }
+        return s.toString();
+    }
+    
+    public String getJobsListAsHTML(int userid){
+        StringBuilder s = new StringBuilder();
+        //TODO
+        
+        return s.toString();
+    }
+    
+    public void setSkillsList(){
+        // TODO
+        // delete all where userid = userid
+        // create new record(s) for updated user skills
     }
 }
