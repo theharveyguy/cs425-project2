@@ -46,7 +46,6 @@ public class Database {
         String query;
         PreparedStatement pstatement = null;
         ResultSet resultset = null;
-        ResultSetMetaData metadata = null;
         boolean hasResult;
         
         HashMap <String,String> results = null;
@@ -62,10 +61,11 @@ public class Database {
             
             if (hasResult) {
                 resultset = pstatement.getResultSet();
-                
                 if (resultset.next()) {
-                    results.put("id",resultset.getString("id").trim());
-                    results.put("displayname", resultset.getString("displayname"));
+                    while (resultset.next()) {
+                        results.put("id",resultset.getString("id").trim());
+                        results.put("displayname", resultset.getString("displayname"));
+                    }
                 }
             }
         }
@@ -77,27 +77,52 @@ public class Database {
     public String getSkillsListAsHTML (int userid){
         StringBuilder s = new StringBuilder();
         
-        // TODO
-        // query database and get info back as resultset
+        //db pool variables
+        Database db = null;
+        Connection connection;
+        //SQL variables
+        String query;
+        PreparedStatement pstatement = null;
+        ResultSet resultset = null;
+        ResultSetMetaData metadata = null;
+        boolean hasResult;
         
-        while (resultset.next()){
-            String description = resultset.getString("description");
-            int id = resultset.getInt("id");
+        try{
+            connection = getConnection();
             
+            query = "SELECT skills.*, a.? \n" +
+                    "FROM skills LEFT JOIN (SELECT * FROM applicants_to_skills WHERE userid = 1) AS a \n" +
+                    "ON skills.id = a.skillsid";
+            pstatement = connection.prepareStatement(query);
+            pstatement.setString(1, Integer.toString(userid));
             
-            s.append("<input type=\"checkbox\" name=\"skills\" value=\"");
-            s.append(id);
-            s.append("\" id=\"skills_").append(id).append("\"");
-            if (user != 0){
-                s.append("checked");
+            hasResult = pstatement.execute();
+            
+            if (hasResult) {
+                resultset = pstatement.getResultSet();
+                if (resultset.next()){
+                    while (resultset.next()){
+                        String description = resultset.getString("description");
+                        int id = resultset.getInt("id");
+                        
+                        s.append("<input type=\"checkbox\" name=\"skills\" value=\"");
+                        s.append(id);
+                        s.append("\" id=\"skills_").append(id).append("\"");
+                        if (resultset.getInt("user") != 0){
+                            s.append("checked");
+                        }
+                        s.append("><br/>");
+
+                        s.append("<label for=\"skills_").append(id).append("\">");
+                        s.append(description);
+                        s.append("</label> <br/>");
+                    }
+                }
             }
-            s.append("><br/>");
-            
-            s.append("<label for=\"skills_").append(id).append("\">");
-            s.append(description);
-            s.append("</label> <br/>");
-            
         }
+        catch (Exception e) { System.err.println( e.toString() ); }
+        
+        
         return s.toString();
     }
     
