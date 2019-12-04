@@ -130,6 +130,56 @@ public class Database {
         StringBuilder s = new StringBuilder();
         //TODO
         
+        //db pool variables
+        Database db = null;
+        Connection connection;
+        //SQL variables
+        String query;
+        PreparedStatement pstatement = null;
+        ResultSet resultset = null;
+        ResultSetMetaData metadata = null;
+        boolean hasResult;
+        
+        try{
+            connection = getConnection();
+        
+            query = "SELECT jobs.id, jobs.name, a.userid FROM\n" +
+                    "jobs LEFT JOIN (SELECT * FROM applicants_to_jobs WHERE userid = 1) as a\n" +
+                    "ON jobs.id IN\n" +
+                    "(SELECT jobsid AS id FROM\n" +
+                    "(applicants_to_skills JOIN skills_to_jobs\n" +
+                    "ON applicants_to_skills.skillsid = skills_to_jobs.skillsid)\n" +
+                    "WHERE applicants_to_skills.userid = 1)\n" +
+                    "ORDER BY jobs.name";
+            pstatement = connection.prepareStatement(query);
+            
+            hasResult = pstatement.execute();
+            
+            if (hasResult){
+                resultset = pstatement.getResultSet();
+                if (resultset.next()){
+                    while (resultset.next()){
+                        String description = resultset.getString("jobs.name");
+                        int id = resultset.getInt("jobs.id");
+                        
+                        s.append("<input type=\"checkbox\" name=\"jobs\" value=\"");
+                        s.append(id);
+                        s.append("\" id=\"job_").append(id).append("\"");
+                        if (resultset.getInt("user") != 0){
+                            s.append("checked");
+                        }
+                        s.append("><br/>");
+
+                        s.append("<label for=\"job_").append(id).append("\">");
+                        s.append(description);
+                        s.append("</label> <br/>");
+                    }
+                }
+            }
+            
+        }
+        catch (Exception e) { System.err.println( e.toString() ); }
+        
         return s.toString();
     }
     
