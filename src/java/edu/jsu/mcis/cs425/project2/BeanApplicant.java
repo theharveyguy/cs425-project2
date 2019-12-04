@@ -50,13 +50,13 @@ public class BeanApplicant {
         return(db.getJobsListAsHTML(userid));
     }
     
-    public void setJobsList() throws NamingException{
+    public String getJobsList() throws NamingException{
         Database db = new Database();
-        // set jobs in database
+        return ( db.getJobsListAsHTML(userid) );
     }
     
     public void setSkillsList() throws NamingException{
         Database db = new Database();
-        db.setSkillsList();
+        db.setSkillsList(userid, skills);
     }
 }

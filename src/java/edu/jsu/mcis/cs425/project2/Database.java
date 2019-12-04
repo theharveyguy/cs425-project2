@@ -133,9 +133,36 @@ public class Database {
         return s.toString();
     }
     
-    public void setSkillsList(){
-        // TODO
-        // delete all where userid = userid
-        // create new record(s) for updated user skills
+    public void setSkillsList(int userid, String[] skills){
+        
+        //db pool variables
+        Database db = null;
+        Connection connection;
+        //SQL variables
+        String query;
+        PreparedStatement pstatement = null;
+                
+        try{
+            connection = getConnection();
+            
+            // delete all where userid = userid
+            query = "DELETE * FROM applicants_to_skills WHERE userid = ?";
+            pstatement = connection.prepareStatement(query);
+            pstatement.setString(1, Integer.toString(userid));
+            
+            pstatement.execute();
+            
+            // then create new records for updated user skills
+            for (String skill : skills){
+                query = "INSERT INTO applicants_to_skills (userid,skillsid) VALUES (?,?)";
+                pstatement = connection.prepareStatement(query);
+                pstatement.setString(1, Integer.toString(userid));
+                pstatement.setString(2, skill);
+                
+                pstatement.execute();
+            }// Iterates through skills array, making new record for each skill
+            
+        }
+        catch (Exception e) { System.err.println( e.toString() ); }
     }
 }
