@@ -71,6 +71,8 @@ public class Database {
         }
         catch (Exception e) { System.err.println( e.toString() ); }
         
+        closeConnection();
+        
         return results;
     }
     
@@ -122,6 +124,7 @@ public class Database {
         }
         catch (Exception e) { System.err.println( e.toString() ); }
         
+        closeConnection();
         
         return s.toString();
     }
@@ -180,6 +183,8 @@ public class Database {
         }
         catch (Exception e) { System.err.println( e.toString() ); }
         
+        closeConnection();
+        
         return s.toString();
     }
     
@@ -214,5 +219,7 @@ public class Database {
             
         }
         catch (Exception e) { System.err.println( e.toString() ); }
+        
+        closeConnection();
     }
 }
